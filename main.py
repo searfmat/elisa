@@ -3,6 +3,9 @@ import matplotlib.ticker as ticker
 import csv
 import math
 
+from reportlab.pdfgen import canvas 
+from reportlab.lib import colors
+
 validPos = 0.075
 validNeg = 0.15
 
@@ -40,6 +43,41 @@ def readCSV():
 
     return csvList
     
+def generateDoc():
+
+    fileName = 'ELISA_Results.pdf'
+    documentTitle = 'ELISA Results'
+    title = 'ELISA Results'
+    subTitle = 'AviServe LLC'
+
+    textLines = [
+    'Results: ',
+    'UNDER CONSTRUCTION'
+    ]
+
+    image = 'img/plot.png'
+
+    pdf = canvas.Canvas(fileName)
+    pdf.setTitle(documentTitle)
+
+    pdf.setFont("Helvetica", 24)
+    pdf.drawCentredString(300, 770, title)
+    pdf.setFont("Helvetica", 12)
+    pdf.drawString(30,720, subTitle)
+
+    pdf.line(30, 710, 550, 710)
+
+    text = pdf.beginText(40, 250)
+    text.setFont("Courier", 18)
+    text.setFillColor(colors.red)
+    for line in textLines:
+        text.textLine(line)
+
+    pdf.drawText(text)
+
+    pdf.drawInlineImage(image, 45, 300, width = 500, height = 400)
+
+    pdf.save()
 
 
 def main():
@@ -106,7 +144,9 @@ def main():
 
     ax.set_xticks([0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5,10.5,11.5,12.5,13.5,14.5,15.5,16.5,17.5,18.5],      minor=True)
     ax.set_xticklabels(['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18'], minor=True)
-    plt.show()
+    plt.savefig('img/plot.png')
+
+    generateDoc()
 
     print("Done")
 
